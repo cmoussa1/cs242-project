@@ -17,7 +17,7 @@ Inside of the directory of your choice, run:
 scrapy startproject my_project_name
 ```
 
-There will be a number of folders and files created.
+There will be a number of folders and files created!!
 
 * `scrapy.cfg`: the project configuration file.
 * `projectname/`: this directory contains your project’s Python modules.
@@ -32,3 +32,4 @@ Inside the `spiders/` director, you can create a spider file using the
 ```console
 scrapy genspider my_new_spider www.baseball-reference.com
 ```
+
