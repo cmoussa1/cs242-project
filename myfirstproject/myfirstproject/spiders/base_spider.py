@@ -42,12 +42,12 @@ class BaseSpider(scrapy.Spider):
             }
             
             yield scrapy.Request(host + player_link, 
-                                callback=self.parse_individual_stats,
-                                cb_kwargs={
+                                 callback=self.parse_individual_stats,
+                                 cb_kwargs={
                                     'player': player,
                                     'isPitcher': num_games_pitched != "0",
                                     'year': year,
-                                })
+                                 })
 
     def parse_individual_stats(self, response, player, isPitcher, year):
         # add the is_pitcher attr to the payload before anything else
@@ -117,6 +117,30 @@ class BaseSpider(scrapy.Spider):
             #TODO: need to update the selector for awards_summary to return an array
             #grabbing just the text does not work, they do some special logic to build up award lists for players
             player['award_summary'] = individualRow.css('td[data-stat="award_summary"]::text').get()
+
+        # get hyperlink to player's wiki page on Baseball-Reference
+        player_info_link = response.xpath('//a[contains(text(), "View Player Info")]/@href').get()
+
+        # check if link exists
+        if player_info_link:
+            yield scrapy.Request(
+                response.urljoin(player_info_link),
+                callback=self.parse_player_info,
+                cb_kwargs={'player': player}
+            )
+        else:
+            # if the link does not exist, just yield the player info we already have
+            yield player
+
+    def parse_player_info(self, response, player):
+        # Locate the <h2> tag with the <span> ID 'Biographical Information'
+        # and select following <p> tags until another header is reached
+        bio_paragraphs = response.xpath('//h2[span/@id="Biographical_Information"]/following-sibling::p[preceding-sibling::h2[1][span/@id="Biographical_Information"]]')
+
+        # extract only the text content from each paragraph, excluding <a> tags or other elements
+        bio_text = ' '.join([''.join(para.xpath('.//text()').getall()) for para in bio_paragraphs])
+        # add the bio to the player object that is yielded
+        player['biographical_information'] = bio_text.strip()
 
         yield player
 
