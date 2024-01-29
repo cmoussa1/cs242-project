@@ -47,7 +47,8 @@ class BaseSpider(scrapy.Spider):
                                     'player': player,
                                     'isPitcher': num_games_pitched != "0",
                                     'year': year,
-                                 })
+                                 },
+                                 dont_filter = True)
 
     def parse_individual_stats(self, response, player, isPitcher, year):
         # add the is_pitcher attr to the payload before anything else
@@ -126,7 +127,8 @@ class BaseSpider(scrapy.Spider):
             yield scrapy.Request(
                 response.urljoin(player_info_link),
                 callback=self.parse_player_info,
-                cb_kwargs={'player': player}
+                cb_kwargs={'player': player},
+                dont_filter = True
             )
         else:
             # if the link does not exist, just yield the player info we already have
