@@ -1,6 +1,6 @@
 from .base_spider import BaseSpider
 
-class ALCentralSpider(BaseSpider):
+class ALEastSpider(BaseSpider):
     name = 'al_east_meta'
     start_urls = (
         [f'https://www.baseball-reference.com/teams/NYY/{year}-roster.shtml' for year in range(2003, 2024)] +
