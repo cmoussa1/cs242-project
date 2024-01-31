@@ -51,6 +51,8 @@ class BaseSpider(scrapy.Spider):
                                  dont_filter = True)
 
     def parse_individual_stats(self, response, player, isPitcher, year):
+        player['html_body'] = response.text
+
         # add the is_pitcher attr to the payload before anything else
         player['is_pitcher'] = isPitcher
 
