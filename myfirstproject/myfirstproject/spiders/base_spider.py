@@ -9,7 +9,7 @@ class BaseSpider(scrapy.Spider):
         # iterate through each row in the roster table
         rows = response.css('#appearances > tbody > tr')
         for row in rows:
-            # get all of the data we are interested in from the parent table
+            # get metadata from the parent table that contains active roster
             name = row.css('th > a::text').get()
             age = row.css('td[data-stat="age"]::text').get()
             height = row.css('td[data-stat="height"]::text').get()
@@ -21,12 +21,14 @@ class BaseSpider(scrapy.Spider):
             war = row.css('td[data-stat="WAR"]::text').get()
             salary = row.css('td[data-stat="Salary"]::text').get()
 
-            # var to determine if player is pitcher or not
+            # var to determine if player is pitcher or not by looking at
+            # number of games they were announced as a pitcher in
             num_games_pitched = row.css('td[data-stat="G_p_app"]::text').get()
             
-            # extract the player link
+            # extract the player's home page link from parent table
             player_link = row.css('th > a::attr(href)').get()
 
+            # begin construction of JSON object to store scraped data
             player = {
                 'year': year,
                 'name': name,
