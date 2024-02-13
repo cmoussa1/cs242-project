@@ -4,6 +4,7 @@ logging.disable(sys.maxsize)
 
 import lucene
 import json
+import time
 import os
 from org.apache.lucene.store import MMapDirectory, SimpleFSDirectory, NIOFSDirectory
 from java.nio.file import Paths
@@ -95,11 +96,22 @@ def retrieve(storedir, query, max_results=20, top_k=5):
 
     print(topkdocs)
 
+start_time = time.time()
 
 lucene.initVM(vmargs=['-Djava.awt.headless=true'])
 create_index('sample_baseball_index/')
+
+end_time = time.time()
+runtime = end_time - start_time
+print("Index Building Runtime:", runtime, "seconds")
+
+start_time = time.time()
 
 user_input = input("Please enter search query: ")
 print("You entered:", user_input)
 print("Returning the top 5 associated documents")
 retrieve('sample_baseball_index/', user_input)
+
+end_time = time.time()
+runtime = end_time - start_time
+print("Search Query Runtime:", runtime, "seconds")
