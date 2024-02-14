@@ -89,10 +89,6 @@ class BaseSpider(scrapy.Spider):
             player['bases_on_balls_per_nine'] = individualRow.css('td[data-stat="bases_on_balls_per_nine"]::text').get()
             player['strikeouts_per_nine'] = individualRow.css('td[data-stat="strikeouts_per_nine"]::text').get()
             player['strikeouts_per_base_on_balls'] = individualRow.css('td[data-stat="strikeouts_per_base_on_balls"]::text').get()
-            player['home_runs_per_nine'] = individualRow.css('td[data-stat="home_runs_per_nine"]::text').get()
-            #TODO: need to update the selector for awards_summary to return an array
-            #grabbing just the text does not work, they do some special logic to build up award lists for players
-            player['award_summary'] = individualRow.css('td[data-stat="award_summary"]::text').get()
 
         else:
             individualRow = response.css('#batting_standard\.' + year)
@@ -119,9 +115,6 @@ class BaseSpider(scrapy.Spider):
             player['sac_hits'] = individualRow.css('td[data-stat="SH"]::text').get()
             player['sac_flies'] = individualRow.css('td[data-stat="SF"]::text').get()
             player['batter_intentional_walks'] = individualRow.css('td[data-stat="IBB"]::text').get()
-            #TODO: need to update the selector for awards_summary to return an array
-            #grabbing just the text does not work, they do some special logic to build up award lists for players
-            player['award_summary'] = individualRow.css('td[data-stat="award_summary"]::text').get()
 
         # get hyperlink to player's wiki page on Baseball-Reference
         player_info_link = response.xpath('//a[contains(text(), "View Player Info")]/@href').get()
